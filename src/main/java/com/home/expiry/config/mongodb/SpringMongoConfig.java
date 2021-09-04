@@ -24,8 +24,7 @@ public class SpringMongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
-        return mongoTemplate;
+        return new MongoTemplate(mongoDbFactory());
     }
 
 }

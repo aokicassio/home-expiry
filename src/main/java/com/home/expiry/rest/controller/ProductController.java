@@ -38,6 +38,13 @@ public class ProductController {
                                     : ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable String id){
+        productService.deleteById(id);
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/reset")
     public ResponseEntity deleteAll(){
         productService.deleteAll();
