@@ -16,7 +16,7 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.home.expiry.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.home.expiry.rest.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
