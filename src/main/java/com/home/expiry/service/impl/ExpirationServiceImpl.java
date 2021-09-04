@@ -15,12 +15,12 @@ public class ExpirationServiceImpl implements ExpirationService {
     private ProductQuery productQuery;
 
     @Override
-    public List<Product> retriveAllExpired() {
+    public List<Product> retrieveAllExpired() {
         return productQuery.queryAllExpired();
     }
 
     @Override
-    public List<Product> retriveAllDue() {
+    public List<Product> retrieveAllDue() {
         return productQuery.queryAllDue();
     }
 }

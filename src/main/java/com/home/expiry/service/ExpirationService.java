@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ExpirationService {
 
-    List<Product> retriveAllExpired();
+    List<Product> retrieveAllExpired();
 
-    List<Product> retriveAllDue();
+    List<Product> retrieveAllDue();
 }

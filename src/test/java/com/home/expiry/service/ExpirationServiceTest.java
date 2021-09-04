@@ -1,10 +1,8 @@
 package com.home.expiry.service;
 
 import com.home.expiry.data.query.ProductQuery;
-import com.home.expiry.data.repository.ProductRepository;
 import com.home.expiry.model.Product;
 import com.home.expiry.service.impl.ExpirationServiceImpl;
-import com.home.expiry.service.impl.ProductServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,20 +34,20 @@ public class ExpirationServiceTest {
     }
 
     @Test
-    public void testRetriveAllExpired(){
+    public void testRetrieveAllExpired(){
         when(productQuery.queryAllExpired()).thenReturn(generateExpiredList());
 
-        List<Product> response = expirationService.retriveAllExpired();
+        List<Product> response = expirationService.retrieveAllExpired();
 
         Assert.assertNotNull(response);
         Assert.assertFalse(response.isEmpty());
     }
 
     @Test
-    public void retriveAllDue(){
+    public void retrieveAllDue(){
         when(productQuery.queryAllDue()).thenReturn(generateDueList());
 
-        List<Product> response = expirationService.retriveAllDue();
+        List<Product> response = expirationService.retrieveAllDue();
 
         Assert.assertNotNull(response);
         Assert.assertFalse(response.isEmpty());
