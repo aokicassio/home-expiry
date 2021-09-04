@@ -21,7 +21,7 @@ public class ExpirationController {
 
     @RequestMapping(value = "/expired", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> allExpired(){
-        return new ResponseEntity(expireService.retriveAllExpired(), HttpStatus.OK);
+        return new ResponseEntity<>(expireService.retriveAllExpired(), HttpStatus.OK);
     }
 
     @GetMapping

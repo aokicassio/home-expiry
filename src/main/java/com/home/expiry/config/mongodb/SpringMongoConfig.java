@@ -18,12 +18,12 @@ public class SpringMongoConfig {
     private String db;
 
     @Bean
-    public MongoDbFactory mongoDbFactory() throws Exception {
+    public MongoDbFactory mongoDbFactory() {
         return new SimpleMongoDbFactory(new MongoClient(), db);
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() throws Exception {
+    public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongoDbFactory());
     }
 

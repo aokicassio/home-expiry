@@ -27,12 +27,12 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity<List<Product>> all(){
-        return new ResponseEntity<List<Product>>(productService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getById(@PathVariable String id){
-        Optional<Product> optional = Optional.of(productService.getById(id));
+        Optional<Product> optional = Optional.ofNullable(productService.getById(id));
 
         return optional.isPresent() ? ResponseEntity.ok(optional.get())
                                     : ResponseEntity.notFound().build();
