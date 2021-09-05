@@ -4,6 +4,7 @@ import com.home.expiry.data.repository.ProductRepository;
 import com.home.expiry.model.Product;
 import com.home.expiry.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAll() {
-        return productRepository.findAll();
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "expiryDate"));
     }
 
     @Override
