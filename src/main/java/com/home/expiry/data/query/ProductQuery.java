@@ -18,7 +18,7 @@ public class ProductQuery {
 
     public List<Product> queryAllExpired(){
         Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").lte(today()));
+        query.addCriteria(Criteria.where("expiryDate").lt(today()));
         return mongoTemplate.find(query, Product.class);
     }
 
