@@ -18,13 +18,18 @@ public class ProductQuery {
 
     public List<Product> queryAllExpired(){
         Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").lte(LocalDate.now()));
+        query.addCriteria(Criteria.where("expiryDate").lte(today()));
         return mongoTemplate.find(query, Product.class);
     }
 
     public List<Product> queryAllDue(){
         Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").gte(LocalDate.now()));
+        query.addCriteria(Criteria.where("expiryDate").is(today()));
         return mongoTemplate.find(query, Product.class);
+    }
+
+    private LocalDate today(){
+        final LocalDate today = LocalDate.now();
+        return today;
     }
 }
