@@ -2,7 +2,6 @@ package com.home.expiry.rest.controller;
 
 import com.home.expiry.model.Product;
 import com.home.expiry.service.ExpirationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping("/expiration")
 public class ExpirationController {
 
-    @Autowired
     private ExpirationService expireService;
+
+    public ExpirationController(ExpirationService expireService) {
+        this.expireService = expireService;
+    }
 
     @GetMapping(value = "/expired")
     public ResponseEntity<List<Product>> allExpired(){

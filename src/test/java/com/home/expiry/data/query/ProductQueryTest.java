@@ -1,24 +1,19 @@
 package com.home.expiry.data.query;
 
-import com.home.expiry.model.Product;
-import com.home.expiry.test.utils.ProductTestUtils;
-import org.junit.Assert;
+import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -26,41 +21,40 @@ public class ProductQueryTest {
 
     private ProductQuery productQuery;
 
-    @Mock
-    private MongoTemplate mongoTemplate;
+    private String currentDate;
 
     @Before
     public void init(){
         productQuery = new ProductQuery();
-        ReflectionTestUtils.setField(productQuery, "mongoTemplate", mongoTemplate);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.now();
+        currentDate = dtf.format(localDate);
     }
 
     @Test
-    public void testQueryAllExpired(){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").lte(LocalDate.now()));
+    public void getAllExpiredQuery(){
+        Query query = productQuery.getAllExpiredQuery();
 
-        when(mongoTemplate.find(query, Product.class)).thenReturn(ProductTestUtils.generateExpiredList());
+        assertNotNull(query);
+        Document document = query.getQueryObject();
+        document.get("expiryDate").toString();
 
-        List<Product> response = productQuery.queryAllExpired();
+        String criteria = String.valueOf(document.get("expiryDate"));
+        String expected = String.format("$lt=%s", currentDate);
 
-        Assert.assertNotNull(response);
-        Assert.assertFalse(response.isEmpty());
-
-        Assert.assertTrue(response.get(0).getExpiryDate().isBefore(LocalDate.now()));
+        assertTrue(criteria.contains(expected));
     }
 
     @Test
-    public void testQueryAllDue(){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").gte(LocalDate.now()));
+    public void testGetAllDueQuery(){
+        Query query = productQuery.getAllDueQuery();
+        assertNotNull(query);
+        Document document = query.getQueryObject();
+        document.get("expiryDate").toString();
 
-        when(mongoTemplate.find(query, Product.class)).thenReturn(ProductTestUtils.generateDueList());
+        String criteria = String.valueOf(document.get("expiryDate"));
+        String expected = currentDate;
 
-        List<Product> response = productQuery.queryAllDue();
-
-        Assert.assertNotNull(response);
-        Assert.assertFalse(response.isEmpty());
-        Assert.assertTrue(response.get(0).getExpiryDate().isAfter(LocalDate.now()));
+        assertTrue(criteria.contains(expected));
     }
 }

@@ -3,7 +3,6 @@ package com.home.expiry.service.impl;
 import com.home.expiry.data.repository.ProductRepository;
 import com.home.expiry.model.Product;
 import com.home.expiry.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,11 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public void insert(Product product) {

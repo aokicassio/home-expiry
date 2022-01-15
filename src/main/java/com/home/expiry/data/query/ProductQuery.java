@@ -1,35 +1,29 @@
 package com.home.expiry.data.query;
 
-import com.home.expiry.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 public class ProductQuery {
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    public static final String EXPIRY_DATE = "expiryDate";
 
-    public List<Product> queryAllExpired(){
+    public Query getAllExpiredQuery(){
         Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").lt(today()));
-        return mongoTemplate.find(query, Product.class);
+        query.addCriteria(Criteria.where(EXPIRY_DATE).lt(today()));
+        return query;
     }
 
-    public List<Product> queryAllDue(){
+    public Query getAllDueQuery(){
         Query query = new Query();
-        query.addCriteria(Criteria.where("expiryDate").is(today()));
-        return mongoTemplate.find(query, Product.class);
+        query.addCriteria(Criteria.where(EXPIRY_DATE).is(today()));
+        return query;
     }
 
     private LocalDate today(){
-        final LocalDate today = LocalDate.now();
-        return today;
+        return LocalDate.now();
     }
 }

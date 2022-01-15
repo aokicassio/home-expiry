@@ -3,6 +3,7 @@ package com.home.expiry.service;
 import com.home.expiry.data.query.ProductQuery;
 import com.home.expiry.model.Product;
 import com.home.expiry.service.impl.ExpirationServiceImpl;
+import com.home.expiry.test.utils.ProductTestUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +11,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -25,54 +27,44 @@ public class ExpirationServiceTest {
     private ExpirationServiceImpl expirationService;
 
     @Mock
+    private MongoTemplate mongoTemplate;
+
+    @Mock
     private ProductQuery productQuery;
 
     @Before
     public void init(){
-        expirationService = new ExpirationServiceImpl();
-        ReflectionTestUtils.setField(expirationService, "productQuery", productQuery);
+        expirationService = new ExpirationServiceImpl(mongoTemplate, productQuery);
     }
 
     @Test
     public void testRetrieveAllExpired(){
-        when(productQuery.queryAllExpired()).thenReturn(generateExpiredList());
+        Query query = new Query();
+        query.addCriteria(Criteria.where("expiryDate").lte(LocalDate.now()));
+
+        when(productQuery.getAllExpiredQuery()).thenReturn(query);
+        when(mongoTemplate.find(query, Product.class)).thenReturn(ProductTestUtils.generateExpiredList());
 
         List<Product> response = expirationService.retrieveAllExpired();
 
         Assert.assertNotNull(response);
         Assert.assertFalse(response.isEmpty());
+        Assert.assertTrue(response.get(0).getExpiryDate().isBefore(LocalDate.now()));
     }
 
     @Test
     public void retrieveAllDue(){
-        when(productQuery.queryAllDue()).thenReturn(generateDueList());
+        Query query = new Query();
+        query.addCriteria(Criteria.where("expiryDate").gte(LocalDate.now()));
+
+        when(productQuery.getAllDueQuery()).thenReturn(query);
+        when(mongoTemplate.find(query, Product.class)).thenReturn(ProductTestUtils.generateDueList());
 
         List<Product> response = expirationService.retrieveAllDue();
 
         Assert.assertNotNull(response);
         Assert.assertFalse(response.isEmpty());
-    }
-
-    private List<Product> generateExpiredList(){
-        List<Product> products = new ArrayList<>();
-        products.add(generateExpiredProduct());
-
-        return products;
-    }
-
-    private Product generateExpiredProduct(){
-        return new Product("productName", LocalDate.parse("2019-01-01"));
-    }
-
-    private List<Product> generateDueList(){
-        List<Product> products = new ArrayList<>();
-        products.add(generateDueProduct());
-
-        return products;
-    }
-
-    private Product generateDueProduct(){
-        return new Product("productName", LocalDate.now().plusMonths(1));
+        Assert.assertTrue(response.get(0).getExpiryDate().isAfter(LocalDate.now()));
     }
 
 }

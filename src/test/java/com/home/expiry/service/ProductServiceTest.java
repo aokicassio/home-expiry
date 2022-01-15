@@ -35,8 +35,7 @@ public class ProductServiceTest {
 
     @Before
     public void init(){
-        productService = new ProductServiceImpl();
-        ReflectionTestUtils.setField(productService, "productRepository", repository);
+        productService = new ProductServiceImpl(repository);
     }
 
     @Test
