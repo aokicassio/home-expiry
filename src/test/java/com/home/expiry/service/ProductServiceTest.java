@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -51,7 +52,7 @@ public class ProductServiceTest {
         List<Product> productList = new ArrayList<>();
         productList.add(generateProduct());
 
-        when(repository.findAll()).thenReturn(productList);
+        when(repository.findAll((Sort) any())).thenReturn(productList);
 
         List<Product> response = productService.getAll();
 

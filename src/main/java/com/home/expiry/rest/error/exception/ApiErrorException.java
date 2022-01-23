@@ -8,14 +8,16 @@ import lombok.Setter;
 @Setter
 public class ApiErrorException extends IllegalArgumentException {
 
-    private ErrorMessage errorMessage;
+    private final ErrorMessage errorMessage;
 
-    public ApiErrorException(String errorMessage){
-        super(errorMessage);
+    public ApiErrorException(ErrorMessage errorMessage){
+        super(errorMessage.getTitle());
+        this.errorMessage = errorMessage;
     }
 
-    public ApiErrorException(String errorMessage, Throwable err){
-        super(errorMessage, err);
+    public ApiErrorException(ErrorMessage errorMessage, Throwable err){
+        super(errorMessage.getTitle(), err);
+        this.errorMessage = errorMessage;
     }
 
 }

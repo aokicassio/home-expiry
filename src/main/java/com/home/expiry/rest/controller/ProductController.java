@@ -23,7 +23,7 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity insert(@RequestBody Product product){
+    public ResponseEntity<Object> insert(@RequestBody Product product){
 
         //TODO validation of input
         productService.insert(product);
@@ -41,23 +41,21 @@ public class ProductController {
         Optional<Product> optional = Optional.ofNullable(productService.getById(id));
 
         if(!optional.isPresent()){
-            NotFoundException notFoundException = new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND.getTitle());
-            notFoundException.setErrorMessage(ErrorMessage.PRODUCT_NOT_FOUND);
-            throw notFoundException;
+            throw new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND);
         }
 
         return ResponseEntity.ok(optional.get());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable String id){
+    public ResponseEntity<Object> delete(@PathVariable String id){
         productService.deleteById(id);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reset")
-    public ResponseEntity deleteAll(){
+    public ResponseEntity<Object> deleteAll(){
         productService.deleteAll();
 
         return ResponseEntity.ok().build();
